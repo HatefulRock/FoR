@@ -8,8 +8,17 @@ G = 9.8  # acceleration due to gravity, in m/s^2
 L1 = 1.0  # length of pendulum 1 in m
 L2 = 1.0  # length of pendulum 2 in m
 M1 = 1.0  # mass of pendulum 1 in kg
-M2 = 1.0  # mass of pendulum 2 in kg
+M2 = 0.5  # mass of pendulum 2 in kg
 
+# L1 et L2 définit précédemment
+def cinematique_inv(x2,y2):
+    '''calcul les angles theta1,theta2 du bras en fct de position fixée x2,y2'''
+    global L1,L2
+    L = np.sqrt(x2**2+y2**2)
+    thetap = np.arccos(x2/L)
+    theta1 = np.arccos((L1**2 + L**2  - L2**2)/(2*L1*L)) + thetap
+    theta2 = np.arccos((L1**2 + L2**2 - L**2) /(2*L1*L2)) - np.pi
+    return theta1,theta2
 
 def derivs(state, t):
 
@@ -39,9 +48,9 @@ t = np.arange(0.0, 20, dt)
 
 # th1 and th2 are the initial angles (degrees)
 # w10 and w20 are the initial angular velocities (degrees per second)
-th1 = 120.0
+th1 = 90.0
 w1 = 0.0
-th2 = -10.0
+th2 = 180.0
 w2 = 0.0
 
 # initial state
@@ -71,9 +80,11 @@ def init():
     return line, time_text
 
 
+
 def animate(i):
     thisx = [0, x1[i], x2[i]]
     thisy = [0, y1[i], y2[i]]
+    
 
     line.set_data(thisx, thisy)
     time_text.set_text(time_template % (i*dt))
@@ -81,6 +92,9 @@ def animate(i):
 
 ani = animation.FuncAnimation(fig, animate, np.arange(1, len(y)),
                               interval=25, blit=True, init_func=init)
+
+
+
 
 # ani.save('double_pendulum.mp4', fps=15)
 plt.show()
