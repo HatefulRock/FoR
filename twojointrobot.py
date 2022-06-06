@@ -4,11 +4,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 class Rob:
-    def __init__(self,L1,L2,q1,q2):
+    def __init__(self,L1,L2,q1,q2,M1,M2,M3):
         self.L1=L1
         self.L2=L2
         self.q1=q1
         self.q2=q2
+        self.M1=M1
+        self.M2=M2
+        self.M3=M3 #masse de la "mouche"
         self.Xp=self.get_cartecoord()[0]
         self.Yp=self.get_cartecoord()[1]
         self.q1point=0
@@ -27,7 +30,6 @@ class Rob:
         self.q2+=self.q2point*self.deltat
         self.Xp=self.get_cartecoord()[0]
         self.Yp=self.get_cartecoord()[1]
-        print(self.Xp,self.Yp)
     
     def get_cartecoord(self):
         Xp=self.L1*math.cos(self.q1)+self.L2*math.cos(self.q1+self.q2)
