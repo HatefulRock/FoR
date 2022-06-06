@@ -1,23 +1,32 @@
+from distutils.command.sdist import show_formats
+from scipy.__config__ import show
 from backprop import NN
 #from vrep_pioneer_simulation import VrepPioneerSimulation
 #from rdn import Pioneer # rdn pour ROS avec le pioneer
 #import rospy
 from trainer import OnlineTrainer
+from twojointrobot import Rob
 import json
 import threading
+import matplotlib.pyplot as plt
+import numpy as np
 
+show_animation = True
+
+if show_animation:
+    plt.ion()
 
 #robot = VrepPioneerSimulation()
-#robot = Pioneer(rospy)
+robot = Rob(1,1,2.7,-0.5)
 HL_size= 10# nbre neurons of Hiden layer
-network = NN(3, HL_size, 2)
+network = NN(2, HL_size, 2)
 
 choice = input('Do you want to load previous network? (y/n) --> ')
 if choice == 'y':
     with open('last_w.json') as fp:
         json_obj = json.load(fp)
 
-    for i in range(3):
+    for i in range(2):
         for j in range(HL_size):
             network.wi[i][j] = json_obj["input_weights"][i][j]
     for i in range(HL_size):
@@ -35,11 +44,11 @@ if choice == 'y':
 elif choice == 'n':
     trainer.training = False
 
-target = input("Enter the first target : x y radian --> ")
+target = input("Enter the first target : x y --> ")
 target = target.split()
 for i in range(len(target)):
     target[i] = float(target[i])
-print('New target : [%d, %d, %d]'%(target[0], target[1], target[2]))
+print('New target : [%d, %d]'%(target[0], target[1]))
 
 continue_running = True
 while(continue_running):
@@ -50,6 +59,7 @@ while(continue_running):
 
     #Ask for stop running
     input("Press Enter to stop the current training")
+    show_animation=False
     trainer.running = False
     choice = ''
     while choice!='y' and choice !='n':
@@ -61,13 +71,15 @@ while(continue_running):
             choice_learning = input('Do you want to learn ? (y/n) --> ')
         if choice_learning =='y':
             trainer.training = True
+            show_animation=True
         elif choice_learning == 'n':
             trainer.training = False
+            show_animation=True
         target = input("Move the robot to the initial point and enter the new target : x y radian --> ")
         target = target.split()
         for i in range(len(target)):
             target[i] = float(target[i])
-        print('New target : [%d, %d, %d]'%(target[0], target[1], target[2]))
+        print('New target : [%d, %d]'%(target[0], target[1]))
     elif choice == 'n':
         continue_running = False
 
