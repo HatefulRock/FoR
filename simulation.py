@@ -17,7 +17,7 @@ if show_animation:
     plt.ion()
 
 #robot = VrepPioneerSimulation()
-robot = Rob(1,1,2.7,-0.5,1,1,1)
+robot = Rob(1,1,0.2,0.1,1,1,1)
 HL_size= 10# nbre neurons of Hiden layer
 network = NN(2, HL_size, 2)
 
